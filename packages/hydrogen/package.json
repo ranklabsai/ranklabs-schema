@@ -1,7 +1,12 @@
 {
   "name": "@ranklabs/schema-hydrogen",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ranklabsai/ranklabs-schema.git",
+    "directory": "packages/hydrogen"
+  },
   "sideEffects": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
