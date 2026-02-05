@@ -1,0 +1,20 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://example.com/blog/hello#article",
+      "headline": "Hello",
+      "description": "World",
+      "url": "https://example.com/blog/hello",
+      "datePublished": "2026-01-01",
+      "dateModified": "2026-01-02",
+      "author": {
+        "@type": "Person",
+        "@id": "https://example.com/#author",
+        "name": "Alice",
+        "url": "https://example.com/about"
+      }
+    }
+  ]
+}

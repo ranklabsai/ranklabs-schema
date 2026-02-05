@@ -1,0 +1,37 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Product",
+      "@id": "https://example.com/products/test-product?a=1&b=2#product",
+      "name": "Test Product",
+      "description": "Desc",
+      "url": "https://Example.com/products/test-product?utm_source=x&b=2&a=1#frag",
+      "image": [
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://example.com/img.jpg",
+          "url": "https://example.com/img.jpg",
+          "caption": "Alt"
+        }
+      ],
+      "brand": {
+        "@type": "Brand",
+        "name": "Acme"
+      },
+      "offers": {
+        "@type": "Offer",
+        "@id": "https://example.com/products/test-product?a=1&b=2#offer",
+        "url": "https://Example.com/products/test-product?utm_source=x&b=2&a=1#frag",
+        "price": 10,
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition",
+        "inventoryLevel": {
+          "@type": "QuantitativeValue",
+          "value": 0
+        }
+      }
+    }
+  ]
+}

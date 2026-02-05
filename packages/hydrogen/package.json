@@ -1,0 +1,36 @@
+{
+  "name": "@ranklabs/schema-hydrogen",
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean",
+    "dev": "tsup src/index.ts --format esm --dts --watch",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0"
+  },
+  "dependencies": {
+    "@ranklabs/schema": "workspace:*"
+  },
+  "peerDependencies": {
+    "@shopify/hydrogen": ">=2025.x",
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "@shopify/hydrogen": { "optional": true }
+  },
+  "files": [
+    "dist"
+  ]
+}

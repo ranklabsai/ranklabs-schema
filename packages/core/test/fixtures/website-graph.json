@@ -1,0 +1,22 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://example.com/#website",
+      "name": "Example",
+      "url": "https://example.com/",
+      "potentialAction": [
+        {
+          "@type": "SearchAction",
+          "@id": "https://example.com/#search-action",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://example.com/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      ]
+    }
+  ]
+}

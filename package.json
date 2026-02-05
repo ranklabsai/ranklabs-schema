@@ -1,0 +1,26 @@
+{
+  "name": "ranklabs-schema",
+  "private": true,
+  "description": "RankLabs AEO Infrastructure",
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "vitest": "^2.0.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "tsup": "^8.0.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

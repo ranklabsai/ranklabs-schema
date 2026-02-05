@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": "https://example.com/collections/sneakers#collection-page",
+      "name": "Sneakers",
+      "description": "All sneakers",
+      "url": "https://example.com/collections/sneakers",
+      "mainEntity": {
+        "@type": "ItemList",
+        "@id": "https://example.com/collections/sneakers#itemlist",
+        "name": "Sneakers",
+        "description": "All sneakers",
+        "itemListOrder": "https://schema.org/ItemListUnordered",
+        "numberOfItems": 1,
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "item": {
+              "@type": "Product",
+              "@id": "https://example.com/products/test-product#product",
+              "name": "Test Product",
+              "description": "Desc",
+              "url": "https://example.com/products/test-product",
+              "image": [
+                {
+                  "@type": "ImageObject",
+                  "contentUrl": "https://example.com/img.jpg",
+                  "url": "https://example.com/img.jpg",
+                  "caption": "Alt"
+                }
+              ],
+              "brand": {
+                "@type": "Brand",
+                "name": "Acme"
+              },
+              "offers": {
+                "@type": "Offer",
+                "@id": "https://example.com/products/test-product#offer",
+                "url": "https://example.com/products/test-product",
+                "price": 10,
+                "priceCurrency": "USD",
+                "availability": "https://schema.org/InStock",
+                "itemCondition": "https://schema.org/NewCondition"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://example.com/app#software-application",
+      "name": "RankLabs",
+      "headline": "AEO Tool",
+      "description": "AEO Tool",
+      "url": "https://example.com/app",
+      "operatingSystem": "Web",
+      "applicationCategory": "BusinessApplication",
+      "offers": {
+        "@type": "Offer",
+        "@id": "https://example.com/app#offer-primary",
+        "url": "https://example.com/app",
+        "price": 0,
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": 0,
+          "priceCurrency": "USD",
+          "referenceQuantity": {
+            "@type": "QuantitativeValue",
+            "value": 1,
+            "unitCode": "MON"
+          }
+        }
+      }
+    }
+  ]
+}

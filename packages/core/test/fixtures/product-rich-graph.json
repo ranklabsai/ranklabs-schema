@@ -1,0 +1,107 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Product",
+      "@id": "https://example.com/products/rich?a=1&b=2#product",
+      "name": "Rich Product",
+      "description": "Desc",
+      "url": "https://Example.com/products/rich?utm_source=x&b=2&a=1#frag",
+      "image": [
+        {
+          "@type": "ImageObject",
+          "contentUrl": "https://example.com/img.jpg",
+          "url": "https://example.com/img.jpg",
+          "caption": "Alt"
+        }
+      ],
+      "brand": {
+        "@type": "Brand",
+        "name": "Acme"
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "@id": "https://example.com/reviews/1?product=rich#review",
+          "url": "https://example.com/reviews/1?product=rich",
+          "datePublished": "2026-01-01",
+          "reviewBody": "Great",
+          "author": {
+            "@type": "Person",
+            "name": "Alice"
+          },
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": 5,
+            "bestRating": 5,
+            "worstRating": 1
+          }
+        }
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "@id": "https://example.com/products/rich?a=1&b=2#aggregate-rating",
+        "ratingValue": 4.8,
+        "reviewCount": 12,
+        "bestRating": 5,
+        "worstRating": 1
+      },
+      "offers": {
+        "@type": "Offer",
+        "@id": "https://example.com/products/rich?a=1&b=2#offer",
+        "url": "https://Example.com/products/rich?utm_source=x&b=2&a=1#frag",
+        "price": 10,
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition",
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingOrigin": {
+            "@type": "DefinedRegion",
+            "addressCountry": "US",
+            "addressRegion": "NY",
+            "postalCode": "10001"
+          },
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": 5,
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": [
+              "US"
+            ]
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "unitCode": "DAY",
+              "minValue": 0,
+              "maxValue": 1
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "unitCode": "DAY",
+              "minValue": 2,
+              "maxValue": 5
+            }
+          }
+        },
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "applicableCountry": "US",
+          "merchantReturnDays": 30,
+          "merchantReturnLink": "https://example.com/returns",
+          "returnFees": "https://schema.org/FreeReturn",
+          "returnMethod": [
+            "https://schema.org/ReturnByMail",
+            "https://schema.org/ReturnInStore"
+          ],
+          "refundType": "https://schema.org/FullRefund"
+        }
+      }
+    }
+  ]
+}

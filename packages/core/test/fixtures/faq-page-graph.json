@@ -1,0 +1,29 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "FAQPage",
+      "@id": "https://example.com/faq#faq",
+      "name": "FAQ",
+      "url": "https://example.com/faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is RankLabs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An AEO toolkit."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do you support JSON-LD?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes."
+          }
+        }
+      ]
+    }
+  ]
+}
