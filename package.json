@@ -2,6 +2,12 @@
   "name": "ranklabs-schema",
   "private": true,
   "description": "RankLabs AEO Infrastructure",
+  "homepage": "https://ranklabs.ai",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ranklabsai/ranklabs-schema.git"
+  },
   "packageManager": "pnpm@10.0.0",
   "scripts": {
     "build": "turbo run build",

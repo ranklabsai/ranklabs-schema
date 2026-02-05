@@ -7,6 +7,8 @@
     "url": "https://github.com/ranklabsai/ranklabs-schema.git",
     "directory": "packages/next"
   },
+  "homepage": "https://ranklabs.ai",
+  "license": "MIT",
   "sideEffects": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -36,6 +38,8 @@
     "react": ">=18"
   },
   "files": [
-    "dist"
+    "dist",
+    "LICENSE",
+    "README.md"
   ]
 }
