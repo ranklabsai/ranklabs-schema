@@ -20,8 +20,7 @@ pnpm add @ranklabs/schema @ranklabs/schema-next
 ### Recommended: render a graph (most pages)
 
 ```tsx
-import { GraphSchema } from '@ranklabs/schema-next';
-import { mapWebPage, mapProduct, type ProductInput, type WebPageInput } from '@ranklabs/schema';
+import { GraphSchema, mapWebPage, mapProduct, type ProductInput, type WebPageInput } from '@ranklabs/schema-next';
 
 export function MySchema({ page, product }: { page: WebPageInput; product: ProductInput }) {
   return <GraphSchema nodes={[mapWebPage(page), mapProduct(product)]} />;
@@ -46,7 +45,10 @@ export function MyProductJsonLd({ product }: { product: ProductInput }) {
 - `JsonLdSchema`
   - Raw renderer for any JSON-LD object (already includes `@context` if you pass a graph)
 - Typed convenience components (each wraps the core mapper + `withContext`)
+  - `BrandSchema`
   - `ProductSchema`
+  - `CollectionPageSchema`
+  - `ItemListSchema`
   - `SoftwareApplicationSchema`
   - `OfferSchema`
   - `AggregateRatingSchema`
@@ -57,8 +59,10 @@ export function MyProductJsonLd({ product }: { product: ProductInput }) {
   - `OrganizationSchema`
   - `WebPageSchema`
   - `BreadcrumbListSchema`
+  - `ImageSchema`
+  - `VideoSchema`
 
 ## Notes
 
-- This adapter is intentionally thin. The source of truth is always `@ranklabs/schema` mappers/types.
+- This adapter re-exports the full public API of `@ranklabs/schema` (mappers, types, utilities) so you can use single-imports.
 - If you need strict validation/cleaning, do it in `@ranklabs/schema` before passing nodes to `GraphSchema`.

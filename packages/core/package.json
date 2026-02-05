@@ -26,6 +26,9 @@
     "typescript": "^5.7.0",
     "tsup": "^8.0.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist"
   ]

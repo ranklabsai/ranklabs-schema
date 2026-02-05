@@ -21,7 +21,10 @@
     "@types/react": "^19.0.0"
   },
   "dependencies": {
-    "@ranklabs/schema": "workspace:*"
+    "@ranklabs/schema": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "peerDependencies": {
     "@shopify/hydrogen": ">=2025.x",

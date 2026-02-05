@@ -20,8 +20,7 @@ pnpm add @ranklabs/schema @ranklabs/schema-hydrogen
 ### Recommended: render a graph (most routes)
 
 ```tsx
-import { GraphSchema } from '@ranklabs/schema-hydrogen';
-import { mapWebPage, mapProduct, type ProductInput, type WebPageInput } from '@ranklabs/schema';
+import { GraphSchema, mapWebPage, mapProduct, type ProductInput, type WebPageInput } from '@ranklabs/schema-hydrogen';
 
 export function MySchema({ page, product }: { page: WebPageInput; product: ProductInput }) {
   return <GraphSchema nodes={[mapWebPage(page), mapProduct(product)]} />;
@@ -44,7 +43,10 @@ export function MyOrgJsonLd({ org }: { org: OrganizationInput }) {
 - `GraphSchema`
 - `JsonLdSchema`
 - Typed convenience components
+  - `BrandSchema`
   - `ProductSchema`
+  - `CollectionPageSchema`
+  - `ItemListSchema`
   - `SoftwareApplicationSchema`
   - `OfferSchema`
   - `AggregateRatingSchema`
@@ -55,8 +57,10 @@ export function MyOrgJsonLd({ org }: { org: OrganizationInput }) {
   - `OrganizationSchema`
   - `WebPageSchema`
   - `BreadcrumbListSchema`
+  - `ImageSchema`
+  - `VideoSchema`
 
 ## Notes
 
-- This adapter is intentionally thin. The source of truth is always `@ranklabs/schema`.
+- This adapter re-exports the full public API of `@ranklabs/schema` (mappers, types, utilities) so you can use single-imports.
 - Hydrogen is an optional peer dependency so this package can be used in non-Hydrogen React environments too.
