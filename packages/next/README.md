@@ -1,13 +1,25 @@
 # @ranklabs/schema-next
 
-Next.js adapter for `@ranklabs/schema`.
+Next.js adapter for `@ranklabs/schema` (AEO/LLM-friendly JSON-LD).
 
 This package renders JSON-LD as a `<script type="application/ld+json">` tag, using the same core mappers and types from `@ranklabs/schema`.
+
+## Why “LLM-friendly”?
+
+This adapter is a thin renderer over the core package. The “LLM-friendly” aspects come from the underlying design:
+
+- **Graph-first composition** (`GraphSchema` + `createGraph`) for pages with multiple entities and shared identity.
+- **Stable entity identity** via canonical `@id`s.
+- **Opt-in runtime hardening** via `prepareJsonLd` (clean + validate before render).
 
 ## Install
 
 ```bash
 pnpm add @ranklabs/schema @ranklabs/schema-next
+```
+
+```bash
+npm i @ranklabs/schema @ranklabs/schema-next
 ```
 
 ## Requirements
@@ -24,6 +36,19 @@ import { GraphSchema, mapWebPage, mapProduct, type ProductInput, type WebPageInp
 
 export function MySchema({ page, product }: { page: WebPageInput; product: ProductInput }) {
   return <GraphSchema nodes={[mapWebPage(page), mapProduct(product)]} />;
+}
+```
+
+### Optional: validate/clean before rendering (strict mode)
+
+```tsx
+import { JsonLdSchema, createGraph, prepareJsonLd, mapWebPage, mapProduct } from '@ranklabs/schema-next';
+import type { ProductInput, WebPageInput } from '@ranklabs/schema-next';
+
+export function MySchema({ page, product }: { page: WebPageInput; product: ProductInput }) {
+  const graph = createGraph(mapWebPage(page), mapProduct(product));
+  const safeGraph = prepareJsonLd(graph, { mode: 'throw' });
+  return <JsonLdSchema data={safeGraph} />;
 }
 ```
 
@@ -66,3 +91,9 @@ export function MyProductJsonLd({ product }: { product: ProductInput }) {
 
 - This adapter re-exports the full public API of `@ranklabs/schema` (mappers, types, utilities) so you can use single-imports.
 - If you need strict validation/cleaning, do it in `@ranklabs/schema` before passing nodes to `GraphSchema`.
+- All components render deterministic, escaped JSON-LD suitable for server rendering and streaming.
+
+## Guides
+
+- Next.js cookbook: https://github.com/ranklabsai/ranklabs-schema/blob/main/docs/cookbooks/nextjs.md
+- Docs index: https://github.com/ranklabsai/ranklabs-schema/tree/main/docs

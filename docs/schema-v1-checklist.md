@@ -1,5 +1,13 @@
 # RankLabs Schema v1 Checklist
 
+See also:
+
+- [Docs index](./index.md)
+- [Core package: @ranklabs/schema](./packages/schema.md)
+- [Graphs and composition](./concepts/graphs.md)
+- [Canonical URLs and stable @id](./concepts/identity.md)
+- [Cleaning and validation](./concepts/validation.md)
+
 ## Output invariants
 - Mappers must return plain JSON-LD nodes without `@context`.
 - Graph composition must be centralized in `createGraph()`.

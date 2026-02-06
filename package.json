@@ -1,13 +1,40 @@
 {
   "name": "ranklabs-schema",
   "private": true,
-  "description": "RankLabs AEO Infrastructure",
+  "description": "RankLabs Schema.org JSON-LD tooling for AEO, SEO, and LLMs: typed mappers, @graph utilities, and framework adapters.",
+  "keywords": [
+    "ranklabs",
+    "schema",
+    "schema.org",
+    "jsonld",
+    "json-ld",
+    "structured-data",
+    "aeo",
+    "answer-engine-optimization",
+    "llm",
+    "ai"
+  ],
   "homepage": "https://ranklabs.ai",
+  "contributors": [
+    {
+      "name": "Sangmin Lee",
+      "email": "sang@ranklabs.ai"
+    }
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ranklabsai/ranklabs-schema.git"
+    "url": "git+https://github.com/ranklabsai/ranklabs-schema.git"
   },
+  "bugs": {
+    "url": "https://github.com/ranklabsai/ranklabs-schema/issues"
+  },
+  "author": "RankLabs <sang@ranklabs.ai>",
+  "funding": {
+    "type": "url",
+    "url": "https://ranklabs.ai"
+  },
+  "readme": "README.md",
   "packageManager": "pnpm@10.0.0",
   "scripts": {
     "build": "turbo run build",
@@ -24,7 +51,9 @@
     "tsup": "^8.0.0"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   },
   "engines": {
     "node": ">=20.0.0"

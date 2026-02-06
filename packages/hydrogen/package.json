@@ -1,13 +1,46 @@
 {
   "name": "@ranklabs/schema-hydrogen",
-  "version": "1.0.2",
+  "version": "1.0.3",
+  "description": "React components for rendering Schema.org JSON-LD (@graph) in Shopify Hydrogen using @ranklabs/schema.",
+  "keywords": [
+    "schema",
+    "schema.org",
+    "jsonld",
+    "json-ld",
+    "structured-data",
+    "seo",
+    "aeo",
+    "answer-engine-optimization",
+    "llm",
+    "ai",
+    "shopify",
+    "hydrogen",
+    "react",
+    "rich-results",
+    "product-schema",
+    "faq-schema",
+    "schema-markup",
+    "ldjson"
+  ],
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ranklabsai/ranklabs-schema.git",
+    "url": "git+https://github.com/ranklabsai/ranklabs-schema.git",
     "directory": "packages/hydrogen"
   },
   "homepage": "https://ranklabs.ai",
+  "bugs": {
+    "url": "https://github.com/ranklabsai/ranklabs-schema/issues"
+  },
+  "author": "RankLabs <sang@ranklabs.ai>",
+  "funding": {
+    "type": "url",
+    "url": "https://ranklabs.ai"
+  },
+  "readme": "README.md",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "license": "MIT",
   "sideEffects": false,
   "main": "./dist/index.js",
@@ -18,6 +51,7 @@
       "import": "./dist/index.js"
     }
   },
+  "module": "./dist/index.js",
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts --clean",
     "dev": "tsup src/index.ts --format esm --dts --watch",

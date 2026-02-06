@@ -1,5 +1,13 @@
 # RankLabs Schema v1 Spec
 
+See also:
+
+- [Docs index](./index.md)
+- [Core package: @ranklabs/schema](./packages/schema.md)
+- [Graphs and composition](./concepts/graphs.md)
+- [Canonical URLs and stable @id](./concepts/identity.md)
+- [Cleaning and validation](./concepts/validation.md)
+
 ## Goals
 - Stable, authority-grade Schema.org JSON-LD output suitable for:
   - Search (Google rich results)

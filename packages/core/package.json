@@ -1,13 +1,46 @@
 {
   "name": "@ranklabs/schema",
-  "version": "1.0.2",
+  "version": "1.0.3",
+  "description": "Typed Schema.org JSON-LD mappers, graph utilities, and validation (@graph) for SEO, AEO, and LLMs.",
+  "keywords": [
+    "schema",
+    "schema.org",
+    "jsonld",
+    "json-ld",
+    "structured-data",
+    "seo",
+    "aeo",
+    "answer-engine-optimization",
+    "llm",
+    "ai",
+    "rich-results",
+    "typescript",
+    "graph",
+    "@graph",
+    "product-schema",
+    "faq-schema",
+    "schema-markup",
+    "ldjson"
+  ],
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ranklabsai/ranklabs-schema.git",
+    "url": "git+https://github.com/ranklabsai/ranklabs-schema.git",
     "directory": "packages/core"
   },
   "homepage": "https://ranklabs.ai",
+  "bugs": {
+    "url": "https://github.com/ranklabsai/ranklabs-schema/issues"
+  },
+  "author": "RankLabs <sang@ranklabs.ai>",
+  "funding": {
+    "type": "url",
+    "url": "https://ranklabs.ai"
+  },
+  "readme": "README.md",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "license": "MIT",
   "sideEffects": false,
   "main": "./dist/index.js",
