@@ -13,6 +13,7 @@ export * from './collection';
 
 // 3. Authority & Content
 export * from './content';
+export * from './howto';
 
 // 4. Identity & Site Structure
 export * from './organization';

@@ -23,7 +23,11 @@ export function mapOrganization(input: OrganizationInput): Organization | LocalB
     
     // REPUTATION & KNOWLEDGE GRAPH
     // The "sameAs" array connects your site to LinkedIn, Twitter, Wikipedia, etc.
-    sameAs: input.sameAs, 
+    sameAs: input.sameAs,
+    publishingPrinciples: input.publishingPrinciples,
+    award: input.award,
+    knowsLanguage: input.knowsLanguage,
+    areaServed: input.areaServed,
 
     // CONTACT & SUPPORT
     contactPoint: input.contactPoints?.map(mapContactPoint),

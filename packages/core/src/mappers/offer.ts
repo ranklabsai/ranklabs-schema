@@ -16,6 +16,7 @@ import {
   RETURN_FEES,
   RETURN_METHOD,
 } from '../constants';
+import { devWarn } from '../utils/warn';
 
 /**
  * MAP OFFER
@@ -41,8 +42,11 @@ export function mapOffer(input: OfferInput): Offer {
     priceSpecification,
     
     availability: mapAvailability(input.availability),
+    availabilityStarts: input.availabilityStarts,
+    availabilityEnds: input.availabilityEnds,
+    eligibleRegion: input.eligibleRegion,
     itemCondition: mapCondition(input.itemCondition),
-    
+
     inventoryLevel:
       typeof input.quantity === 'number'
         ? {
@@ -73,8 +77,18 @@ function mapPriceSpecification(
 
 /**
  * HELPER: AVAILABILITY
+ * Maps the string union to a Schema.org URL.
+ * Unknown values fall back to InStock and warn in dev. Typed callers won't hit this,
+ * but untyped data (CMS or metafield inputs cast to OfferInput) can slip invalid
+ * values through.
  */
 function mapAvailability(status: OfferInput['availability']): ItemAvailability {
+  if (typeof status !== 'string' || status.length === 0) {
+    devWarn(
+      `Offer.availability must be a non-empty string (got ${typeof status}), defaulting to InStock`,
+    );
+    return AVAILABILITY.IN_STOCK;
+  }
   const map: Record<string, ItemAvailability> = {
     'InStock': AVAILABILITY.IN_STOCK,
     'OutOfStock': AVAILABILITY.OUT_OF_STOCK,
@@ -82,22 +96,38 @@ function mapAvailability(status: OfferInput['availability']): ItemAvailability {
     'BackOrder': AVAILABILITY.BACK_ORDER,
     'Discontinued': AVAILABILITY.DISCONTINUED,
   };
-  return map[status] || 'https://schema.org/InStock';
+  const mapped = map[status];
+  if (!mapped) {
+    devWarn(`Unknown Offer.availability '${status}', defaulting to InStock`);
+    return AVAILABILITY.IN_STOCK;
+  }
+  return mapped;
 }
 
 /**
  * HELPER: CONDITION
+ * Optional field: returns undefined if the caller didn't set a condition
+ * (so the field is omitted from the emitted Offer rather than lying about
+ * a product being New). Unknown non-empty values fall back to NewCondition
+ * with a dev warning.
  */
 function mapCondition(condition?: string): OfferItemCondition | undefined {
-  if (!condition) return CONDITION.NEW;
-  
+  if (condition === undefined || condition === null || condition === '') {
+    return undefined;
+  }
+
   const map: Record<string, OfferItemCondition> = {
     'New': CONDITION.NEW,
     'Used': CONDITION.USED,
     'Refurbished': CONDITION.REFURBISHED,
     'Damaged': CONDITION.DAMAGED,
   };
-  return map[condition] || CONDITION.NEW;
+  const mapped = map[condition];
+  if (!mapped) {
+    devWarn(`Unknown Offer.itemCondition '${condition}', defaulting to NewCondition`);
+    return CONDITION.NEW;
+  }
+  return mapped;
 }
 
 /**

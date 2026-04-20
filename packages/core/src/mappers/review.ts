@@ -31,8 +31,18 @@ export function mapReview(input: ReviewInput): Review {
     datePublished: input.datePublished,
     reviewBody: input.reviewBody,
     name: input.title || reviewTitle, // The headline of the review
+    inLanguage: input.language,
 
     author,
+
+    itemReviewed: input.itemReviewed
+      ? {
+          '@type': input.itemReviewed.type,
+          '@id': input.itemReviewed.id,
+          name: input.itemReviewed.name,
+          url: input.itemReviewed.url,
+        }
+      : undefined,
 
     reviewRating: {
       '@type': 'Rating',
@@ -56,5 +66,13 @@ export function mapAggregateRating(input: AggregateRatingInput): AggregateRating
     ratingCount: input.ratingCount,
     bestRating: input.bestRating || 5,
     worstRating: input.worstRating || 1,
+    itemReviewed: input.itemReviewed
+      ? {
+          '@type': input.itemReviewed.type,
+          '@id': input.itemReviewed.id,
+          name: input.itemReviewed.name,
+          url: input.itemReviewed.url,
+        }
+      : undefined,
   };
 }

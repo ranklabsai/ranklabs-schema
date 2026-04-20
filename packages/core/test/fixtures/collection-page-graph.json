@@ -29,7 +29,7 @@
                   "@type": "ImageObject",
                   "contentUrl": "https://example.com/img.jpg",
                   "url": "https://example.com/img.jpg",
-                  "caption": "Alt"
+                  "name": "Alt"
                 }
               ],
               "brand": {
@@ -42,8 +42,7 @@
                 "url": "https://example.com/products/test-product",
                 "price": 10,
                 "priceCurrency": "USD",
-                "availability": "https://schema.org/InStock",
-                "itemCondition": "https://schema.org/NewCondition"
+                "availability": "https://schema.org/InStock"
               }
             }
           }

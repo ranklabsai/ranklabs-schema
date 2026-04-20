@@ -10,13 +10,23 @@
 
 export interface ImageInput {
   url: string;
-  /** * AEO CRITICAL: AI uses alt text to "see" the image. 
+  /** * AEO CRITICAL: AI uses alt text to "see" the image.
    * Missing alt text leads to lower confidence scores in Answer Engines.
+   * The mapper emits this as `ImageObject.name` (Schema.org's primary
+   * label, semantically equivalent to HTML `alt`).
    */
-  altText: string; 
+  altText: string;
   width?: number;
   height?: number;
+  /**
+   * Long-form caption distinct from alt text. Emitted as `ImageObject.caption`.
+   */
   caption?: string;
+  /**
+   * Credit line for the image (photographer, artist, publication).
+   * @see https://schema.org/creditText
+   */
+  creditText?: string;
 }
 
 export interface VideoInput {

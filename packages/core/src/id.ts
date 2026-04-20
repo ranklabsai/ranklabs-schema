@@ -30,4 +30,5 @@ export const canonicalId = {
   itemList: (pageUrl: string, key?: string) => `${canonicalUrl(pageUrl)}#itemlist${key ? `-${key}` : ''}`,
   offer: (pageUrl: string, key?: string) => `${canonicalUrl(pageUrl)}#offer${key ? `-${key}` : ''}`,
   searchAction: (siteUrl: string) => fragmentId(siteUrl, 'search-action'),
+  howTo: (pageUrl: string) => `${canonicalUrl(pageUrl)}#howto`,
 } as const;

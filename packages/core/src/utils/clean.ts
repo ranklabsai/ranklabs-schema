@@ -1,7 +1,19 @@
 export type CleanJsonLdOptions = {
+  /** Strip `null` values. Default: false. */
   removeNull?: boolean;
+  /**
+   * Strip empty string values. Default: false.
+   *
+   * WARNING: enabling this can remove required Schema.org fields that happen
+   * to hold an empty string (e.g. `Product.description = ''`,
+   * `Offer.price = ''`). Rich-result eligibility for that node will break
+   * silently. Only enable if you've also added an upstream check that
+   * required fields are non-empty.
+   */
   removeEmptyStrings?: boolean;
+  /** Strip empty arrays. Default: false. */
   removeEmptyArrays?: boolean;
+  /** Strip objects with no remaining keys after cleaning. Default: false. */
   removeEmptyObjects?: boolean;
 };
 

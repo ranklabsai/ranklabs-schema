@@ -6,7 +6,13 @@ import { mapImage } from './media';
 
 /**
  * MAP COLLECTION PAGE
- * Returns a full WebPage that contains the list as its main entity.
+ * Returns a CollectionPage with the product list as its `mainEntity`.
+ *
+ * Structure matches Google's "Product rich results (carousel form)" guidance:
+ * CollectionPage → mainEntity: ItemList → itemListElement: ListItem[] → item: Product
+ * with 1-based positions and `numberOfItems` on the ItemList.
+ *
+ * @see https://developers.google.com/search/docs/appearance/structured-data/product
  * Best for: Category URLs (e.g. /collections/sneakers)
  */
 export function mapCollectionPage(input: CollectionInput): CollectionPage {
@@ -16,12 +22,20 @@ export function mapCollectionPage(input: CollectionInput): CollectionPage {
     name: input.title,
     description: input.description,
     url: input.url,
-    
+
     // VISUALS
     primaryImageOfPage: input.image ? mapImage(input.image) : undefined,
 
     // THE CORE: The "Main Entity" of a collection page is the list itself
-    mainEntity: mapItemList(input), 
+    mainEntity: mapItemList(input),
+
+    // Pagination hints (emitted only when provided)
+    ...(input.pagination?.previousUrl
+      ? { previousItem: { '@type': 'WebPage', url: input.pagination.previousUrl } }
+      : {}),
+    ...(input.pagination?.nextUrl
+      ? { nextItem: { '@type': 'WebPage', url: input.pagination.nextUrl } }
+      : {}),
   };
 }
 
@@ -44,7 +58,9 @@ export function mapItemList(input: CollectionInput): ItemList {
       ? 'https://schema.org/ItemListOrderAscending' 
       : 'https://schema.org/ItemListUnordered',
     
-    numberOfItems: input.products.length,
+    // When paginated, `numberOfItems` should reflect the full collection
+    // size, not just the items on this page. Fall back to the page count.
+    numberOfItems: input.pagination?.totalItems ?? input.products.length,
 
     // MAP THE ITEMS
     itemListElement: input.products.map((product, index) => {

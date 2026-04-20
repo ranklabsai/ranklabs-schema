@@ -12,7 +12,7 @@
           "@type": "ImageObject",
           "contentUrl": "https://example.com/img.jpg",
           "url": "https://example.com/img.jpg",
-          "caption": "Alt"
+          "name": "Alt"
         }
       ],
       "brand": {
@@ -53,7 +53,6 @@
         "price": 10,
         "priceCurrency": "USD",
         "availability": "https://schema.org/InStock",
-        "itemCondition": "https://schema.org/NewCondition",
         "shippingDetails": {
           "@type": "OfferShippingDetails",
           "shippingOrigin": {

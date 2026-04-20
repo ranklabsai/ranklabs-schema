@@ -1,5 +1,6 @@
 import type { WebSite, WebPage, BreadcrumbList, SearchAction } from 'schema-dts';
 import type { PersonRef, OrganizationRef } from './common';
+import type { SpeakableSpecificationInput } from './content';
 
 /**
  * WEBSITE INPUT
@@ -32,16 +33,47 @@ export interface WebPageInput {
   url: string;
   schemaId?: string;
   
-  language?: string;     // e.g. "en-US"
+  /**
+   * BCP-47 language tag (e.g. "en-US", "fr-CA", "ja"). Defaults to "en-US"
+   * if omitted. For multi-locale stores, set this per route from your locale
+   * param. Alternate-language URLs for the same page belong in HTML `<link
+   * rel="alternate" hreflang>` headers, not JSON-LD.
+   * @see https://www.rfc-editor.org/rfc/rfc5646
+   */
+  language?: string;
   datePublished?: string;
   dateModified?: string;
-  
+
+  /**
+   * ISO 8601 date the page was last editorially reviewed. Freshness signal
+   * distinct from `dateModified`: a page can be republished without being
+   * factually re-verified. Set this on evergreen content you periodically
+   * re-check.
+   * @see https://schema.org/lastReviewed
+   */
+  lastReviewed?: string;
+
+  /**
+   * Speakable summary selectors, same shape as on `ArticleInput`. Useful
+   * for non-Article page types like landing pages with quotable intros.
+   * @see https://schema.org/speakable
+   */
+  speakable?: SpeakableSpecificationInput;
+
   // Who "owns" this page?
   publisher?: PersonRef | OrganizationRef;
-  
+
   // Navigation
   breadcrumb?: BreadcrumbInput;
   breadcrumbs?: BreadcrumbInput[];
+
+  /**
+   * Signals the primary subject of this page. Accepts a plain URL or a
+   * full entity ref. Typically set to the canonical `@id` of the Product,
+   * Article, or other main entity the page represents.
+   * @see https://schema.org/mainEntityOfPage
+   */
+  mainEntityOfPage?: string | { id?: string; url?: string };
 }
 
 /**

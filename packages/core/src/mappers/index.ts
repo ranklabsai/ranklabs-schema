@@ -11,7 +11,8 @@ export { mapCollectionPage, mapItemList } from './collection';
 
 // 2. Content Mappers
 export { mapArticle } from './article';
-export { mapFAQPage } from './faq';
+export { mapFAQPage, __resetFaqWarningForTests } from './faq';
+export { mapHowTo } from './howto';
 
 // 3. Core & Identity Mappers
 export { mapOrganization } from './organization';

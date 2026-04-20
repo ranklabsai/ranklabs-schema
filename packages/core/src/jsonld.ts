@@ -9,10 +9,10 @@ function isJsonLdNode(value: unknown): value is JsonLdNode {
 
 function stripContext<T>(node: T): T {
   if (!isJsonLdNode(node)) return node;
-  if (!('@context' in (node as any))) return node;
-
-  const { ['@context']: _ctx, ...rest } = node as any;
-  return rest as T;
+  const record = node as unknown as Record<string, unknown>;
+  if (!('@context' in record)) return node;
+  const { ['@context']: _ctx, ...rest } = record;
+  return rest as unknown as T;
 }
 
 function flattenNodes(input: Array<JsonLdNode | null | undefined | JsonLdNode[]>): JsonLdNode[] {
@@ -63,14 +63,24 @@ export function createGraph(
   };
 }
 
+/**
+ * Add `@context: "https://schema.org"` to a JSON-LD node, stripping any
+ * pre-existing `@context` first. Intended for single-node output where
+ * `createGraph` would be overkill.
+ *
+ * Throws a `TypeError` if `node` is not a plain object. The safe pattern
+ * is to resolve your data in the route loader and guard against
+ * `null` / `undefined` before calling the mapper, so this function only
+ * ever receives a real node.
+ */
 export function withContext<T>(node: T): T & { '@context': string } {
   if (!isJsonLdNode(node)) {
     throw new TypeError('[ranklabs-schema] withContext() expects a JSON-LD object node');
   }
   return {
     '@context': SCHEMA_CONTEXT,
-    ...(stripContext(node) as any),
-  };
+    ...(stripContext(node) as unknown as Record<string, unknown>),
+  } as T & { '@context': string };
 }
 
 function htmlEscapeJson(json: string): string {
@@ -102,10 +112,23 @@ export type JsonLdScriptTagOptions = {
   nonce?: string;
 };
 
+/**
+ * Escape an HTML attribute value so it can be safely interpolated inside
+ * double-quoted attribute context. Quotes, ampersands, and angle brackets
+ * become entities; nothing else is altered.
+ */
+function escapeHtmlAttr(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 export function toJsonLdScriptTag(value: unknown, opts?: JsonLdScriptTagOptions): string {
-  const idAttr = opts?.id ? ` id=\"${opts.id}\"` : '';
-  const nonceAttr = opts?.nonce ? ` nonce=\"${opts.nonce}\"` : '';
+  const idAttr = opts?.id ? ` id="${escapeHtmlAttr(opts.id)}"` : '';
+  const nonceAttr = opts?.nonce ? ` nonce="${escapeHtmlAttr(opts.nonce)}"` : '';
   const json = toJsonLdString(value, { pretty: false, escapeForHtml: true });
 
-  return `<script${idAttr}${nonceAttr} type=\"application/ld+json\">${json}</script>`;
+  return `<script${idAttr}${nonceAttr} type="application/ld+json">${json}</script>`;
 }

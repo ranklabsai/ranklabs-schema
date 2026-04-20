@@ -15,6 +15,15 @@ export type CanonicalizeUrlResult = {
 
 const warnedCanonicalizations = new Set<string>();
 
+/**
+ * @internal Test-only: clears the dedupe set for canonicalization warnings
+ * so a spy can assert warnings fire deterministically across tests.
+ * Not part of the public API.
+ */
+export function __resetCanonicalizationWarningsForTests(): void {
+  warnedCanonicalizations.clear();
+}
+
 function isProductionEnv(): boolean {
   const env = (globalThis as any)?.process?.env?.NODE_ENV;
   return env === 'production';
@@ -52,9 +61,49 @@ function defaults(opts?: CanonicalizeUrlOptions): Required<CanonicalizeUrlOption
   };
 }
 
+/**
+ * Protocols we refuse to canonicalize. These are the classic dangerous
+ * schemes: `javascript:` runs code if rendered as a link, `data:` can
+ * embed HTML/JS, `file:` can exfiltrate local resources, `vbscript:` is
+ * the IE-era equivalent of `javascript:`. Passing one of these into a
+ * mapper would land it in a JSON-LD `@id`, `url`, or `sameAs` field,
+ * creating an open-redirect / link-injection vector for consumers that
+ * render URLs as hyperlinks.
+ */
+const DANGEROUS_PROTOCOLS = new Set([
+  'javascript:',
+  'data:',
+  'vbscript:',
+  'file:',
+]);
+
+/**
+ * Canonicalize a URL (lowercase host, strip default ports, strip tracking
+ * params, sort query params, optionally strip hash / trailing slash).
+ * Returns the canonicalized form plus a list of which transformations
+ * applied, so callers can log or test the effect.
+ *
+ * Rejects dangerous protocols (`javascript:`, `data:`, `file:`,
+ * `vbscript:`) with a `TypeError`, preventing them from landing in JSON-LD
+ * `@id` / `url` / `sameAs` fields.
+ *
+ * Most users should prefer the `canonicalId.*` helpers, which wrap this
+ * and produce a full fragment-based `@id`. Reach for `canonicalizeUrl`
+ * directly when you need the bare canonical form of a URL (for cache
+ * keys, dedup, or logging).
+ *
+ * @example
+ * canonicalizeUrl('https://Example.com/path?utm_source=x&b=2&a=1#frag').url
+ *   // -> 'https://example.com/path?a=1&b=2'
+ */
 export function canonicalizeUrl(url: string, opts?: CanonicalizeUrlOptions): CanonicalizeUrlResult {
   const o = defaults(opts);
   const original = new URL(url);
+  if (DANGEROUS_PROTOCOLS.has(original.protocol.toLowerCase())) {
+    throw new TypeError(
+      `[ranklabs-schema] canonicalizeUrl refuses protocol '${original.protocol}'. Only http(s) and standard web URLs are allowed.`,
+    );
+  }
   const u = new URL(original.toString());
   const changes: string[] = [];
 

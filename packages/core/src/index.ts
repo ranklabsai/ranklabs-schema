@@ -15,3 +15,6 @@ export * from './id';
 export * from './jsonld';
 export * from './utils/clean';
 export * from './utils/validate';
+export * from './utils/rich-results';
+export * from './utils/sanitize';
+export * from './utils/locale';

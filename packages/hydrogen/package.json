@@ -1,7 +1,7 @@
 {
   "name": "@ranklabs/schema-hydrogen",
-  "version": "1.0.3",
-  "description": "React components for rendering Schema.org JSON-LD (@graph) in Shopify Hydrogen using @ranklabs/schema.",
+  "version": "1.1.0",
+  "description": "React SSR components for rendering Schema.org JSON-LD (@graph) in Shopify Hydrogen and other React 18+ storefronts. Built on @ranklabs/schema.",
   "keywords": [
     "schema",
     "schema.org",
@@ -56,23 +56,23 @@
     "build": "tsup src/index.ts --format esm --dts --clean",
     "dev": "tsup src/index.ts --format esm --dts --watch",
     "lint": "tsc -p tsconfig.json --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "vitest run --config ../../vitest.config.ts --root ../.."
   },
   "devDependencies": {
-    "@types/react": "^19.0.0"
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "dependencies": {
-    "@ranklabs/schema": "^1.0.2"
+    "@ranklabs/schema": "workspace:^1.1.0"
   },
   "publishConfig": {
     "access": "public"
   },
   "peerDependencies": {
-    "@shopify/hydrogen": ">=2025.x",
     "react": ">=18"
-  },
-  "peerDependenciesMeta": {
-    "@shopify/hydrogen": { "optional": true }
   },
   "files": [
     "dist",

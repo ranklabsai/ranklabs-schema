@@ -1,5 +1,5 @@
-import type { Product, ProductGroup, Brand } from 'schema-dts';
-import type { OfferInput, ProductInput, VariantInput } from '../types';
+import type { Product, ProductGroup, Brand, Country } from 'schema-dts';
+import type { MappedProduct, MappedProductGroup, OfferInput, ProductInput, VariantInput } from '../types';
 import { canonicalId } from '../id';
 import { mapBrand } from './brand';
 import { mapOffer } from './offer';
@@ -8,17 +8,21 @@ import { mapImage, mapVideo } from './media';
 
 /**
  * THE CORE PRODUCT MAPPER
- * Handles both simple products and complex variant groups.
+ * Handles both simple products and complex variant groups. The return type
+ * is an intersection of schema-dts's Product / ProductGroup with the
+ * `MappedProductExtensions` shape, since several valid Schema.org fields
+ * (countryOfOrigin, mentions, hasMeasurement, etc.) are not included in
+ * schema-dts's narrower ProductLeaf.
  */
-export function mapProduct(input: ProductInput): Product | ProductGroup {
+export function mapProduct(input: ProductInput): MappedProduct | MappedProductGroup {
   const isGroup = input.variants && input.variants.length > 0;
 
   const productNodeId = input.schemaId || canonicalId.product(input.url);
   const productGroupNodeId = input.productGroupSchemaId || input.schemaId || canonicalId.productGroup(input.url);
 
   // 1. Common Properties (Shared by both Single and Group)
-  const base: Product = {
-    '@type': 'Product',
+  const base = {
+    '@type': 'Product' as const,
     '@id': productNodeId,
     name: input.title,
     description: input.description,
@@ -41,45 +45,99 @@ export function mapProduct(input: ProductInput): Product | ProductGroup {
     gtin13: input.gtin13,
     gtin14: input.gtin14,
 
+    // Provenance (AEO: LLMs use this for origin-specific queries)
+    countryOfOrigin: mapCountry(input.countryOfOrigin),
+    countryOfAssembly: input.countryOfAssembly,
+
+    // Demographic / editorial linkage (AEO)
+    audience: input.audience
+      ? { '@type': 'Audience' as const, audienceType: input.audience }
+      : undefined,
+    award: input.award,
+    mentions: input.mentions?.map(mapEntityRef),
+    isRelatedTo: input.isRelatedTo?.map(mapEntityRef),
+    isSimilarTo: input.isSimilarTo?.map(mapEntityRef),
+
+    // Freeform structured specs (for anything color/size/material doesn't cover)
+    additionalProperty: input.additionalProperties?.map((p) => ({
+      '@type': 'PropertyValue' as const,
+      name: p.name,
+      value: p.value,
+      unitCode: p.unitCode,
+      unitText: p.unitText,
+    })),
+
+    // Structured numeric measurements (width, length, weight, etc.)
+    hasMeasurement: input.measurements?.map((m) => ({
+      '@type': 'QuantitativeValue' as const,
+      name: m.name,
+      value: m.value,
+      unitCode: m.unitCode,
+      unitText: m.unitText,
+    })),
+
+    // Certifications (B Corp, Fair Trade, Oeko-Tex, ISO, etc.)
+    hasCertification: input.certifications?.map((c) => ({
+      '@type': 'Certification' as const,
+      name: c.name,
+      url: c.url,
+      validFrom: c.validFrom,
+      issuedBy: c.issuedBy
+        ? { '@type': 'Organization' as const, name: c.issuedBy.name, url: c.issuedBy.url }
+        : undefined,
+    })),
+
     review: input.reviews?.map(mapReview),
 
     // Social Proof
     aggregateRating: input.rating ? mapAggregateRating(input.rating) : undefined,
-    
-    // Pass the context (Organization) if needed, but usually Brand covers it
+
+    // Topical retrieval signal (LLMs)
+    keywords: input.keywords && input.keywords.length > 0 ? input.keywords.join(',') : undefined,
+
+    // Primary-subject signal for disambiguation
+    mainEntityOfPage: mapMainEntityOfPage(input.mainEntityOfPage),
   };
 
   // 2. LOGIC BRANCH: PRODUCT GROUP (VARIANTS)
   if (isGroup) {
-    return {
+    const group: MappedProductGroup = {
       ...base,
       '@type': 'ProductGroup',
       '@id': productGroupNodeId,
       productGroupID: input.productGroupId || input.id,
-      
+
       // Define what varies (e.g. "Color", "Size")
       variesBy: [
         input.color ? 'https://schema.org/color' : undefined,
         input.size ? 'https://schema.org/size' : undefined,
-        input.material ? 'https://schema.org/material' : undefined
+        input.material ? 'https://schema.org/material' : undefined,
       ].filter(Boolean) as string[],
 
       // Map the children
       hasVariant: input.variants!.map((v) => mapVariant(v, input)),
-    } as ProductGroup;
+    };
+    return group;
   }
 
   // 3. LOGIC BRANCH: SINGLE PRODUCT
-  return {
-    ...base,
-    // Offers (Price) only live on the Leaf node
-    offers: Array.isArray(input.offers)
+  // Defensive: `offers` is typed required, but untyped adapter data (e.g. a
+  // broken CMS payload) can send null/undefined. Omit the field instead of
+  // crashing `mapOffer`; `validateRichResults` will flag the missing offer.
+  const offers = input.offers
+    ? Array.isArray(input.offers)
       ? input.offers.map((offer) => mapOffer(withDefaultOfferUrl(offer, input.url)))
-      : mapOffer(withDefaultOfferUrl(input.offers, input.url)),
-      
+      : mapOffer(withDefaultOfferUrl(input.offers, input.url))
+    : undefined;
+
+  const leaf: MappedProduct = {
+    ...base,
+    offers,
+
     // Videos usually live on the main product
     subjectOf: input.videos?.map(mapVideo),
   };
+  return leaf;
 }
 
 function withDefaultOfferUrl(offer: OfferInput, defaultUrl: string): OfferInput {
@@ -121,11 +179,49 @@ function mapVariant(variant: VariantInput, parent: ProductInput): Product {
 }
 
 /**
- * HELPER: MAP BRAND
- * Normalizes brand input into a Schema.org Brand object.
+ * HELPER: MAP COUNTRY
+ * Returns a Schema.org Country node from an ISO 3166-1 alpha-2 code.
+ * Returning a structured Country (not a plain string) gives LLMs a clear
+ * entity to resolve against (e.g. "IN" → India → Wikipedia).
  */
-function normalizeBrand(brandInput: ProductInput['brand']): Brand {
+function mapCountry(code?: string): Country | undefined {
+  if (!code) return undefined;
+  return { '@type': 'Country', name: code };
+}
+
+/**
+ * HELPER: MAP ENTITY REFERENCE
+ * Shared helper for mentions / isRelatedTo / isSimilarTo.
+ */
+function mapEntityRef(ref: import('../types').EntityReference) {
+  return {
+    '@type': ref.type,
+    '@id': ref.id,
+    name: ref.name,
+    url: ref.url,
+  };
+}
+
+function mapMainEntityOfPage(
+  input?: string | { id?: string; url?: string },
+): string | { '@type': 'WebPage'; '@id'?: string; url?: string } | undefined {
+  if (!input) return undefined;
+  if (typeof input === 'string') return input;
+  return { '@type': 'WebPage', '@id': input.id, url: input.url };
+}
+
+/**
+ * HELPER: MAP BRAND
+ * Normalizes brand input into a Schema.org Brand object. Defensive against
+ * null/undefined input from untyped data sources; returns `undefined` in
+ * that case so the `brand` field is omitted instead of crashing.
+ */
+function normalizeBrand(brandInput: ProductInput['brand']): Brand | undefined {
+  if (brandInput === undefined || brandInput === null) {
+    return undefined;
+  }
   if (typeof brandInput === 'string') {
+    if (brandInput.length === 0) return undefined;
     return {
       '@type': 'Brand',
       name: brandInput,

@@ -15,10 +15,19 @@ export function mapWebPage(input: WebPageInput): WebPage {
     url: input.url,
     
     inLanguage: input.language || 'en-US',
-    
+
     // CONTENT DATES (Critical for Freshness signals)
     datePublished: input.datePublished,
     dateModified: input.dateModified,
+    lastReviewed: input.lastReviewed,
+
+    speakable: input.speakable && (input.speakable.cssSelector?.length || input.speakable.xpath?.length)
+      ? {
+          '@type': 'SpeakableSpecification',
+          cssSelector: input.speakable.cssSelector?.length ? input.speakable.cssSelector : undefined,
+          xpath: input.speakable.xpath?.length ? input.speakable.xpath : undefined,
+        }
+      : undefined,
 
     // BREADCRUMBS
     // Maps the navigation path (Home > Shoes > Nike)
@@ -36,6 +45,17 @@ export function mapWebPage(input: WebPageInput): WebPage {
       url: input.publisher.url,
       '@id': input.publisher.id,
     } : undefined,
+
+    // Primary-subject signal
+    mainEntityOfPage: input.mainEntityOfPage
+      ? typeof input.mainEntityOfPage === 'string'
+        ? input.mainEntityOfPage
+        : {
+            '@type': 'WebPage',
+            '@id': input.mainEntityOfPage.id,
+            url: input.mainEntityOfPage.url,
+          }
+      : undefined,
   };
 }
 

@@ -18,6 +18,24 @@ export interface CollectionInput {
 
   // Ordering Signal
   hasExplicitOrdering?: boolean;
+
+  /**
+   * Pagination context. If the collection page is one page of a paginated
+   * set, set these so crawlers understand the structure.
+   *
+   * `totalItems` is the size of the full collection (not this page).
+   * `currentPage` / `totalPages` describe position.
+   * `previousUrl` / `nextUrl` emit on the `CollectionPage` as Schema.org
+   * `previousItem` / `nextItem` style hints (Google accepts rel links,
+   * but structured-data hints help LLMs build site graphs).
+   */
+  pagination?: {
+    totalItems?: number;
+    currentPage?: number;
+    totalPages?: number;
+    previousUrl?: string;
+    nextUrl?: string;
+  };
 }
 
 /**

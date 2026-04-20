@@ -1,6 +1,6 @@
 {
   "name": "@ranklabs/schema",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Typed Schema.org JSON-LD mappers, graph utilities, and validation (@graph) for SEO, AEO, and LLMs.",
   "keywords": [
     "schema",
