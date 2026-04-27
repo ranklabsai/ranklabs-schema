@@ -44,7 +44,9 @@ publish_one() {
   local args=(publish --no-git-checks --access public --tag "$DIST_TAG")
   if [[ -n "$OTP" ]]; then args+=(--otp "$OTP"); fi
   if [[ "$DRY_RUN" == "true" ]]; then args+=(--dry-run); fi
-  say "Publishing $pkg@$VERSION (tag=$DIST_TAG${DRY_RUN:+, dry-run})"
+  local suffix=""
+  if [[ "$DRY_RUN" == "true" ]]; then suffix=", dry-run"; fi
+  say "Publishing $pkg@$VERSION (tag=$DIST_TAG$suffix)"
   pnpm -F "$pkg" "${args[@]}"
 }
 
